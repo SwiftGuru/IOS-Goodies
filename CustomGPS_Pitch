@@ -1,0 +1,78 @@
+//
+//  ViewController.swift
+//
+//  Created by Ihor Rudych on 3/9/17.
+//  Copyright © 2017 Ihor Rudych. All rights reserved.
+//
+
+import UIKit
+import MapKit
+import CoreLocation
+
+class ViewController: UIViewController, MKMapViewDelegate, CLLocationManagerDelegate {
+
+    @IBOutlet weak var mapView: MKMapView!
+    let locationManager:CLLocationManager = CLLocationManager()
+    var userPinView: MKAnnotationView!
+
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        locationManager.delegate = self
+        locationManager.requestWhenInUseAuthorization()
+        locationManager.desiredAccuracy = kCLLocationAccuracyBest
+        
+        mapView.delegate = self
+        
+        self.locationManager.startUpdatingLocation()
+        self.mapView.showsUserLocation = true
+        self.mapView.mapType = MKMapType.standard
+        
+        let lat:CLLocationDegrees = (self.locationManager.location?.coordinate.latitude)!
+        
+        let long:CLLocationDegrees = (self.locationManager.location?.coordinate.longitude)!
+        
+        //let lat:CLLocationDegrees = CLLocationDegrees(exactly: 46.22385815)!
+        //let long:CLLocationDegrees = CLLocationDegrees(exactly: -119.24936676)!
+        let latDelta:CLLocationDegrees = 0.0001
+        let longDelta:CLLocationDegrees = 0.0001
+        let userLocation:CLLocationCoordinate2D = CLLocationCoordinate2DMake(lat, long)
+        let span:MKCoordinateSpan = MKCoordinateSpanMake(latDelta, longDelta)
+        let region:MKCoordinateRegion = MKCoordinateRegion(center: userLocation, span: span)
+        
+        mapView.setRegion(region, animated: true)
+        
+        self.mapView.camera.pitch = 60.0
+
+        
+    }
+    
+    func locationManager(_ manager: CLLocationManager, didUpdateLocations locations: [CLLocation]) {
+        
+    }
+
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        
+    }
+    
+    func mapView(_ mapView: MKMapView, viewFor annotation: MKAnnotation) -> MKAnnotationView? {
+        
+        if annotation is MKUserLocation {
+            let pin = mapView.view(for: annotation) ?? MKAnnotationView(annotation: annotation, reuseIdentifier: nil)
+            let img = UIImage(named: "orange-button-png")
+            pin.image = img
+            
+            
+            
+            return pin
+            
+        }
+        return nil
+    }
+    
+        
+}
+
