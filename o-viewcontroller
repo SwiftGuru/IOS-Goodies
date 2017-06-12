@@ -1,0 +1,45 @@
+//  ViewController.swift
+//  CybeBlocks
+//
+//  Created by Ihor Rudych on 6/5/17.
+//  Copyright © 2017 Ihor Rudych. All rights reserved.
+//
+
+import UIKit
+import SceneKit
+
+class ViewController: UIViewController {
+    var sceneView: SCNView!
+    var spriteScene: OverlayedScene!
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        // Do any additional setup after loading the view, typically from a nib.
+        
+        self.sceneView = SCNView(frame: CGRect(x: 0, y: 0, width: self.view.frame.width, height: self.view.frame.height))
+        self.sceneView.scene = BuildingScene()
+        self.view.addSubview(self.sceneView)
+        self.spriteScene = OverlayedScene(size: self.view.bounds.size)
+        self.sceneView.overlaySKScene = self.spriteScene
+        self.spriteScene.addObserver(self.sceneView.scene!, forKeyPath: "paused", options: .new, context: nil)
+    }
+
+    override func didReceiveMemoryWarning() {
+        super.didReceiveMemoryWarning()
+        // Dispose of any resources that can be recreated.
+    }
+    
+    override func touchesEnded(_ touches: Set<UITouch>, with event: UIEvent?) {
+        let touch = touches.first
+        let location = touch?.location(in: self.sceneView)
+        let hitresult = self.sceneView.hitTest(location!, options: nil)
+        
+        for result in (hitresult as [SCNHitTestResult]) {
+            if result.node == (self.sceneView.scene as! BuildingScene).cubeNode {
+                self.spriteScene.score += 1
+            }
+        }
+    }
+
+}
+
