@@ -1,0 +1,24 @@
+/*
+        var flyToExtent = MKMapRectNull
+        for overlay in overlays {
+            if MKMapRectIsNull(flyToExtent) {
+                flyToExtent = overlay.boundingMapRect
+            } else {
+                flyToExtent = MKMapRectUnion(flyToExtent, overlay.boundingMapRect)
+            }
+        
+        }
+        
+        for annotation in annotations {
+            let annotationPoint = MKMapPointForCoordinate(annotation.coordinate)
+            let pointRect = MKMapRectMake(annotationPoint.x, annotationPoint.y, 0, 0)
+            if MKMapRectIsNull(flyToExtent) {
+                flyToExtent = pointRect
+            } else {
+                flyToExtent = MKMapRectUnion(flyToExtent, pointRect)
+            }
+        }
+        
+        
+        self.mapView.visibleMapRect = flyToExtent
+        */
