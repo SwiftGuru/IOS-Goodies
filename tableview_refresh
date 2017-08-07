@@ -1,0 +1,55 @@
+//  MoreOfViewController.swift
+//  LPT
+//
+//  Created by Igor Rudich on 8/4/17.
+//  Copyright © 2017 Ihor Rudych. All rights reserved.
+//
+
+import Foundation
+import UIKit
+import CoreData
+
+
+class MoreOfViewController: UIViewController{
+    
+    
+   
+    
+    @IBOutlet weak var tableView2: UITableView!
+    
+    @IBOutlet var dataService: MoreTableSource!
+    
+    
+   var refreshControl: UIRefreshControl!
+   
+    
+    let managedObjectContext:NSManagedObjectContext? = (UIApplication.shared.delegate as! AppDelegate).persistentContainer.viewContext
+    var fetchedResultsController:NSFetchedResultsController<NSFetchRequestResult>?
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
+        
+        self.tableView2.delegate = dataService
+        self.tableView2.dataSource = dataService
+        
+        self.refreshControl = UIRefreshControl()
+        
+        self.refreshControl.tintColor = UIColor.black
+        self.refreshControl.addTarget(self.tableView2,
+                                      action: #selector(self.pulledDownForRefresh),
+                                      for: .valueChanged)
+        
+        self.tableView2.addSubview(self.refreshControl)
+        
+        self.tableView2.reloadData()
+    }
+    
+    func pulledDownForRefresh() {
+        self.tableView2.beginUpdates()
+        
+        self.tableView2.reloadRows(at: tableView2.indexPathsForVisibleRows!, with: .none)
+        
+        self.tableView2.endUpdates()
+        self.refreshControl.endRefreshing()
+    }
+   }
